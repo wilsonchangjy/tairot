@@ -13,21 +13,17 @@ body {
     font-family: "Inconsolata", sans-serif;
     color: #0000ff;
 
-    -webkit-font-smoothing: subpixel-antialiased;
+    -webkit-font-smoothing: subpixel-antialiased !important;
 }
 
 section {
-    margin: 32px 0;
+    padding: 32px 0;
 }
 
 p  {
     margin: 0 32px;
     font-size: 16px;
 }
-
-input::placeholder {
-    overflow: visible;
- }
 
 /* Class */
 .logo {
@@ -169,6 +165,10 @@ input::placeholder {
     font-weight: 700;
 }
 
+#topic[contenteditable], #query[contenteditable] {
+    overflow: visible;
+}
+
 #topic[contenteditable]:empty::before, #query[contenteditable]:empty::before {
     content:"What's on your mind?";
     color: rgba(0, 0, 255, 0.5);
@@ -212,4 +212,19 @@ input::placeholder {
     #topic[contenteditable]:empty::before, #query[contenteditable]:empty::before {
         color: rgba(0, 255, 0, 0.5);
     }
+}
+
+/* iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    body {
+      font-weight: 500;
+    }
+
+    .logo, .input {
+        font-weight: 800;
+    }
+
+    #begin, #question, #retry, #static {
+        font-weight: 800;
+    }   
 }
