@@ -231,7 +231,7 @@ class OpenCard {
         this.element.style.transform = `translate(${this.#offsetX}px, 0) rotate(${rotate}deg)`;
         
         // Threshold for Swiping
-        if (Math.abs(this.#offsetX) > this.element.clientWidth * 0.5) {
+        if (Math.abs(this.#offsetX) > this.element.clientWidth * 0.6) {
             this.#swipe(this.#offsetX > 0 ? 1 : -1);
         }
     }
