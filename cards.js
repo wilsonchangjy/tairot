@@ -228,10 +228,10 @@ class OpenCard {
         this.#offsetX = x - this.#startPoint.x;
         this.#offsetY = y - this.#startPoint.y;
         const rotate = this.#offsetX * 0.1;
-        this.element.style.transform = `translate(${this.#offsetX}px, ${this.#offsetY}px) rotate(${rotate}deg)`;
+        this.element.style.transform = `translate(${this.#offsetX}px, 0) rotate(${rotate}deg)`;
         
         // Threshold for Swiping
-        if (Math.abs(this.#offsetX) > this.element.clientWidth * 0.75) {
+        if (Math.abs(this.#offsetX) > this.element.clientWidth * 0.5) {
             this.#swipe(this.#offsetX > 0 ? 1 : -1);
         }
     }

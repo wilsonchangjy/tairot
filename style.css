@@ -12,6 +12,12 @@ html {
 body {
     font-family: "Inconsolata", sans-serif;
     color: #0000ff;
+
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+section {
+    padding: 32px 0;
 }
 
 p  {
@@ -19,9 +25,13 @@ p  {
     font-size: 16px;
 }
 
+input::placeholder {
+    overflow: visible;
+ }
+
 /* Class */
 .logo {
-    margin: 64px 0;
+    margin-bottom: 64px;
 
     font-size: 10px;
     font-weight: 700;
@@ -167,12 +177,12 @@ p  {
 #topic {
     margin-left: 32px;
     text-align: center;
-    width: calc(100vw - 64px);
+    width: calc(100% - 64px);
 }
 
 #query {
     margin-left: 32px;
-    width: calc(100vw - 128px);
+    width: calc(100% - 64px);
 }
 
 /* Dark Mode */
