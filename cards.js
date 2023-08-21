@@ -142,6 +142,7 @@ class OpenCard {
         card.innerHTML = `
             <pre class="art centre-align">${this.cardArt}</pre>
             <div class="chatbox">
+                <div class="user-message"><p id="static">${topic}</p></div>
                 <div class="GPT-message" id="reading">${topicBuffer[Math.floor(Math.random() * topicBuffer.length)]}</div>
             </div>
         `;

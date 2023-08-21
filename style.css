@@ -195,6 +195,10 @@ p  {
         color: #00ff41;
     }
 
+    a {
+        color: #00ff41;
+    }
+
     .card-front {
         background-color: #18181A;
         border-color: #00ff41;
