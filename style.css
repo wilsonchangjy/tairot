@@ -104,8 +104,8 @@ p  {
 
 .art.reversed {
     transform: rotate(180deg);
-    margin-bottom: -5px;
-    padding-bottom: 5px;
+    margin-bottom: -6px;
+    padding-bottom: 6px;
 }
 
 .card-front {
