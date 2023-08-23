@@ -50,7 +50,7 @@ p  {
     outline: none;
     resize: none;
 
-    font-family: "Inconsolata", sans-serif;
+    font-family: "Inconsolata", monospace;
     font-size: 20px;
     font-weight: 700;
     color: #0000ff;
@@ -75,6 +75,11 @@ p  {
     z-index: 5;
 }
 
+.card-back pre {
+    font-size: 22px;
+    line-height: 27px;
+}
+
 .card-back.active {
     opacity: 1;
 
@@ -82,14 +87,17 @@ p  {
 }
 
 .art {
-    margin: 10px 0;
+    margin: 20px 0;
     padding: 0;
 
-    font-size: 24px;
+    font-family: 'Monaco', monospace;
+    font-weight: 400;
 }
 
 .art.reversed {
     transform: rotate(180deg);
+    margin-bottom: -5px;
+    padding-bottom: 5px;
 }
 
 .card-front {
@@ -116,10 +124,11 @@ p  {
 }
 
 .card-front pre {
-    margin: 20px 0;
+    margin: 26px 0;
     padding: 0;
 
-    font-size: 28px;
+    font-size: 27px;
+    line-height: 32px;
 }
 
 .card-front.active {
