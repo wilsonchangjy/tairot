@@ -95,7 +95,7 @@ async function readCard(cardName, index, reversed) {
     $("#reading").text(reading);
 
     $(".chatbox").append(`
-        <div class="GPT-message">Swipe this card away to continue with the reading.</div>
+        <div class="GPT-message">Swipe this card away to continue with the reading, or</div>
         <div class="user-message">
             <p id="question">Ask a question</p>
         </div>
