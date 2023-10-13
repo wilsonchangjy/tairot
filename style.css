@@ -187,6 +187,10 @@ p  {
     -webkit-line-clamp: none;
 }
 
+.gallery-item p {
+    display: inline-block;
+}
+
 .query-topic {
     padding: 8px 0;
 
