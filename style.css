@@ -175,10 +175,12 @@ p  {
 }
 
 .gallery-item {
+    overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;  
-    overflow: hidden;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    white-space: normal;  
 }
 
 .gallery-item.active {
