@@ -37,7 +37,6 @@ function shuffleCards() {
 
 async function drawCard(index, cardName) {
     console.log(cardName);
-    console.log("Cards remaining: " + index);
 
     const reversed = Math.random() > 0.5 ? true : false;
     const cardArt = await readTextFile(cardName);
@@ -95,7 +94,7 @@ async function readCard(cardName, index, reversed) {
     $("#reading").text(reading);
 
     $(".chatbox").append(`
-        <div class="GPT-message">Swipe this card away to continue with the reading, or</div>
+        <div class="GPT-message">Swipe this card right to save this conversation or left to discard, or</div>
         <div class="user-message">
             <p id="question">Ask a question</p>
         </div>
@@ -248,7 +247,12 @@ class OpenCard {
         this.element.style.transition = "transform 1s";
         this.element.style.transform = `translate(${direction * window.innerWidth * 1.5}px, ${this.#offsetY}px) rotate(${90 * direction}deg)`;
 
+        if (direction > 0) {
+            writeToFirebase(cardHistory);
+        }
+
         setTimeout(() => {
+            discardHistory();
             this.element.remove();
         }, 1000);
     }

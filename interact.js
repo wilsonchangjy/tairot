@@ -1,6 +1,7 @@
 // Variables
 const interactive = $(".interactive");
 const begin = $("#begin");
+const logo = $(".logo");
 
 // Functions
 begin.click(function() {
@@ -9,6 +10,10 @@ begin.click(function() {
     `);
 
     $("#topic").focus();
+});
+
+logo.click(function() {
+    location.href = "gallery.html";
 });
 
 function inputKeyPress() {
