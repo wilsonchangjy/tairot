@@ -186,7 +186,7 @@ p  {
 }
 
 .gallery-item p {
-    display: inline;
+    display: inline-block;
 }
 
 .query-topic {
