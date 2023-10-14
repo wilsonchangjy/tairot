@@ -213,7 +213,7 @@ p  {
 
 .sort p.active {
     font-weight: 700;
-    font-style: italics;
+    text-decoration: none;
     pointer-events: none;
 }
 
