@@ -207,12 +207,13 @@ p  {
 
 .sort p {
     margin: 0;
+
+    text-decoration: underline;
 }
 
 .sort p.active {
-    text-decoration: underline;
     font-weight: 700;
-
+    font-style: italics;
     pointer-events: none;
 }
 
