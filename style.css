@@ -185,10 +185,6 @@ p  {
     -webkit-line-clamp: none;
 }
 
-.gallery-item p {
-    display: inline-flex;
-}
-
 .query-topic {
     padding: 8px 0;
 
@@ -241,7 +237,7 @@ p  {
 }
 
 #topic[contenteditable]:empty::before, #query[contenteditable]:empty::before {
-    content:"What's on your mind?";
+    content:"what's on your mind?";
     color: rgba(0, 0, 255, 0.5);
 }
 
