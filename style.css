@@ -179,7 +179,6 @@ p  {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-    white-space: normal;  
 }
 
 .gallery-item.active {
@@ -187,7 +186,7 @@ p  {
 }
 
 .gallery-item p {
-    display: inline-block;
+    display: inline-flexbox;
 }
 
 .query-topic {
