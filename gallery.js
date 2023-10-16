@@ -26,6 +26,10 @@ function populateGallery(content) {
     
         gallery.append(galleryItem);
     }
+
+    $(".gallery-item").click(function() {
+        $(this).toggleClass("active");
+    });
 }
 
 function toggleSort() {
@@ -35,10 +39,6 @@ function toggleSort() {
     $("#oldest").toggleClass("active");
     $("#latest").toggleClass("active");
 }
-
-$(".gallery-item").click(function() {
-    $(this).toggleClass("active");
-});
 
 $("#oldest").click(toggleSort);
 $("#latest").click(toggleSort);

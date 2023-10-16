@@ -90,13 +90,14 @@ async function dealCards() {
 }
 
 async function readCard(cardName, index, reversed) {
+    discardHistory();
     const reading = await topicResponse(cardName, index, reversed);
     $("#reading").text(reading);
 
     $(".chatbox").append(`
-        <div class="GPT-message">Swipe this card right to share this reading anonymously or left to discard, or ask</div>
+        <div class="GPT-message">Swipe this card right to share this reading anonymously or left to discard, or ask a</div>
         <div class="user-message">
-            <p id="question">a follow up question</p>
+            <p id="question">follow up question</p>
         </div>
     `);
 
@@ -252,7 +253,6 @@ class OpenCard {
         }
 
         setTimeout(() => {
-            discardHistory();
             this.element.remove();
         }, 1000);
     }
