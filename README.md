@@ -20,7 +20,7 @@ This project is developed using HTML, CSS and JavaScript (including JQuery).
 
 # Changelog
 **Version 1.04**
-Added Gallery; users will be able to publish and view readings from themselves and other anonymous users. This is done when users swipe right/left to dismiss the card after a reading.
+Added Gallery; users will be able to publish and view readings from themselves and other anonymous users. This is done when users swipe right to dismiss the card after a reading.
 
 **Version 1.03**
 Style changes made to ensure the card's ASCII artwork displays closer to Asya's original designs.
