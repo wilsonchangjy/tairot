@@ -6,7 +6,7 @@ const logo = $(".logo");
 // Functions
 begin.click(function() {
     interactive.html(`
-        <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()"></span>
+        <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()" enterkeyhint="send"></span>
     `);
 
     $("#topic").focus();
@@ -50,7 +50,7 @@ function askQuestion() {
 
     question.click(function () {        
         $(".user-message").last().append(`
-            <span class="input" id="query" role="textbox" contenteditable onkeypress="inputKeyPress()"></span>
+            <span class="input" id="query" role="textbox" contenteditable onkeypress="inputKeyPress()" enterkeyhint="send"></span>
         `);
     
         const input = $("#query");
@@ -69,7 +69,7 @@ function askRetry() {
 
     $("#retry").click(function() {    
         interactive.html(`
-            <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()"></span>
+            <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()" enterkeyhint="send"></span>
         `);
 
         $("#topic").focus();
