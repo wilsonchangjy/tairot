@@ -6,7 +6,7 @@ const logo = $(".logo");
 // Functions
 begin.click(function() {
     interactive.html(`
-        <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()" enterkeyhint="send"></span>
+        <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()" enterkeyhint="done"></span>
     `);
 
     $("#topic").focus();
@@ -69,7 +69,7 @@ function askRetry() {
 
     $("#retry").click(function() {    
         interactive.html(`
-            <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()" enterkeyhint="send"></span>
+            <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()" enterkeyhint="done"></span>
         `);
 
         $("#topic").focus();
