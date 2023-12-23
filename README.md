@@ -20,6 +20,9 @@ This project is developed using HTML, CSS and JavaScript (including JQuery).
 
 # Changelog
 **Version 1.04**
+Updated to GPT 4 Turbo (Preview), and added a simple Statistics page.
+
+**Version 1.04**
 Added Gallery; users will be able to publish and view readings from themselves and other anonymous users. This is done when users swipe right to dismiss the card after a reading.
 
 **Version 1.03**
