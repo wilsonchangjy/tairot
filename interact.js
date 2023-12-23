@@ -6,14 +6,14 @@ const logo = $(".logo");
 // Functions
 begin.click(function() {
     interactive.html(`
-        <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()" enterkeyhint="send"></span>
+        <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()" enterkeyhint="done"></span>
     `);
 
     $("#topic").focus();
 });
 
 logo.click(function() {
-    location.href = "gallery.html";
+    location.href = "statistics.html";
 });
 
 function inputKeyPress() {
@@ -29,6 +29,8 @@ function inputKeyPress() {
     }
     else if (keyPress == 13 && $("#query").text().trim() != "" && $("#query").focus()) {
         $("#query").blur();
+
+        updateStatistics("ask");
 
         promptQuery($("#query").text());
         swapOut("#query");
@@ -69,7 +71,7 @@ function askRetry() {
 
     $("#retry").click(function() {    
         interactive.html(`
-            <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()" enterkeyhint="send"></span>
+            <span class="input" id="topic" role="textbox" contenteditable onkeypress="inputKeyPress()" enterkeyhint="done"></span>
         `);
 
         $("#topic").focus();

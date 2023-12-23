@@ -4,7 +4,7 @@ import { readFromFirebase } from "./firebase.js";
 const gallery = $(".gallery");
 
 // Initialise
-const galleryContent = Object.values(await readFromFirebase());
+const galleryContent = Object.values(await readFromFirebase("gallery"));
 populateGallery(galleryContent.reverse());
 
 // Functions
@@ -32,6 +32,11 @@ function populateGallery(content) {
     });
 }
 
+function scrollTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
 function toggleSort() {
     gallery.empty();
     populateGallery(galleryContent.reverse());
@@ -40,5 +45,6 @@ function toggleSort() {
     $("#latest").toggleClass("active");
 }
 
+$("#back").click(scrollTop);
 $("#oldest").click(toggleSort);
 $("#latest").click(toggleSort);

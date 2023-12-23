@@ -217,6 +217,10 @@ p  {
     pointer-events: none;
 }
 
+.stats {
+    padding: 32px 0;
+}
+
 /* ID */
 #begin, #question, #retry {
     font-size: 20px;
@@ -224,7 +228,7 @@ p  {
     text-decoration: underline;
 }
 
-#begin:hover, #question:hover {
+#begin:hover, #question:hover, #back:hover {
     cursor: pointer;
 }
 
@@ -251,6 +255,10 @@ p  {
 #query {
     margin-left: 32px;
     width: calc(100% - 64px);
+}
+
+#back {
+    text-decoration: underline;
 }
 
 /* Dark Mode */

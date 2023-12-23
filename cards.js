@@ -23,7 +23,8 @@ function flipCard(index, element) {
 }
 
 function shuffleCards() {    
-    const seedRandom = new Math.seedrandom(new Date().getTime());
+    const dateTime = new Date().getTime();
+    const seedRandom = new Math.seedrandom(dateTime);
     const random = seedRandom();
     
     const randomCard = Math.floor(random * deckArray.length);
@@ -31,6 +32,9 @@ function shuffleCards() {
 
     delete deckArray[randomCard];
     deckArray = deckArray.filter(empty => empty);
+
+    updateStatistics({"latest": dateTime});
+    updateStatistics("pull");
 
     return chosenCard;
 }
@@ -246,7 +250,7 @@ class OpenCard {
         document.removeEventListener("touchmove", this.#handleTouchMove);
 
         this.element.style.transition = "transform 1s";
-        this.element.style.transform = `translate(${direction * window.innerWidth * 1.5}px, ${this.#offsetY}px) rotate(${90 * direction}deg)`;
+        this.element.style.transform = `translate(${direction * window.innerWidth * 1.5}px, ${this.#offsetY}px) rotate(${60 * direction}deg)`;
 
         if (direction > 0) {
             writeToFirebase(cardHistory);
