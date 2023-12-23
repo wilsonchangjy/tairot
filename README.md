@@ -19,7 +19,7 @@ This project is developed using HTML, CSS and JavaScript (including JQuery).
 - David Bay's seedrandom.js https://github.com/davidbau/seedrandom; an "under the hood" feature that Asya suggested, which records the exact millisecond timestamp that the user "pulls" a card and uses that to seed a randomiser that assigns which card from the deck is being revealed. Although not made apparent to the user as a conscious decision, this was done in hopes of creating a stronger connection and meaning in each card that is being revealed to the users.
 
 # Changelog
-**Version 1.04**
+**Version 1.05**
 Updated to GPT 4 Turbo (Preview), and added a simple Statistics page.
 
 **Version 1.04**
