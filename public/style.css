@@ -1,0 +1,332 @@
+/* Font Face */
+@font-face {
+    font-family: 'Monaco';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Monaco'), url('Monaco.woff') format('woff');
+}
+
+/* CSS */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Inconsolata", sans-serif;
+    color: #0000ff;
+
+    -webkit-font-smoothing: subpixel-antialiased !important;
+}
+
+section {
+    padding: 32px 24px;
+}
+
+p  {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* Class */
+.logo {
+    margin-bottom: 64px;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.interactive {
+    padding: 64px 0;
+}
+
+.centre-align {
+    text-align: center;
+}
+
+.input {
+    display: block;
+    overflow: hidden;
+    height: auto;
+
+    border: none;
+    outline: none;
+    resize: none;
+
+    font-family: "Inconsolata", monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: #0000ff;
+}
+
+.card-back {
+    position: absolute;
+    top: calc(50vh - 237.5px);
+    left: calc(50vw - 137.5px);
+    width: 275px;
+    height: 475px;
+
+    background-color: #fff;
+    border: 1px solid #0000ff;
+    border-radius: 10px;
+
+    opacity: 0;
+    transform: translateY(25%);
+
+    transition: 1s ease;
+
+    z-index: 5;
+}
+
+.card-back pre {
+    font-size: 22px;
+    line-height: 27px;
+}
+
+.card-back.active {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+.art {
+    margin: 20px 0;
+    padding: 0;
+
+    font-family: 'Monaco', monospace;
+    font-weight: 400;
+}
+
+.art.reversed {
+    transform: rotate(180deg);
+    margin-bottom: -6px;
+    padding-bottom: 6px;
+}
+
+.card-front {
+    position: absolute;
+    top: calc(50vh - 284.5px);
+    left: calc(50vw - 164.5px);
+    width: 329px;
+    height: 569px;
+
+    background-color: #fff;
+    border: 1px solid #0000ff;
+    border-radius: 10px;
+
+    overflow-y: scroll;
+
+    opacity: 0;
+    transform: translateY(10%);
+
+    transition: 0.5s ease;
+    scroll-behavior: smooth;
+
+
+    z-index: 10;
+}
+
+.card-front pre {
+    margin: 26px 0;
+    padding: 0;
+
+    font-size: 27px;
+    line-height: 32px;
+}
+
+.card-front.active {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+.card-front.inactive {
+    opacity: 0;
+
+    transition: 1s ease;
+}
+
+.chatbox {
+    margin: 32px;
+}
+
+.GPT-message {
+    margin-bottom: 32px;
+    text-align: left;
+}
+
+.user-message {
+    margin-bottom: 32px;
+    text-align: right;
+}
+
+.gallery {
+    margin-bottom: 64px;
+    display: flex;
+    flex-direction: column;
+
+    gap: 32px;
+}
+
+.gallery-item {
+    overflow: hidden;
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.gallery-item.active {
+    line-clamp: none;
+    -webkit-line-clamp: none;
+}
+
+.query-topic {
+    padding: 8px 0;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.gallery-item:first-of-type .query-topic:first-of-type {
+    padding-top: 0;
+}
+
+.toolbar {
+    position: relative;
+    margin: 0 0 32px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sort {
+    display: flex;
+    flex-direction: row;
+
+    gap: 16px;
+}
+
+.sort p {
+    margin: 0;
+
+    text-decoration: underline;
+}
+
+.sort p.active {
+    font-weight: 700;
+    text-decoration: none;
+    pointer-events: none;
+}
+
+.stats {
+    padding: 32px 0;
+}
+
+/* ID */
+#begin, #question, #retry {
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+#begin:hover, #question:hover, #back:hover {
+    cursor: pointer;
+}
+
+#static {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#topic[contenteditable], #query[contenteditable] {
+    overflow: visible;
+}
+
+#topic[contenteditable]:empty::before, #query[contenteditable]:empty::before {
+    content:"what's on your mind?";
+    color: rgba(0, 0, 255, 0.5);
+}
+
+#topic {
+    margin-left: 32px;
+    text-align: center;
+    width: calc(100% - 64px);
+}
+
+#back {
+    text-decoration: underline;
+}
+
+#search {
+    border: none;
+    width: auto;
+    min-width: 100px;
+    text-align: right;
+    font-family: "Inconsolata", sans-serif;
+    font-size: 16px;
+    color: #0000ff;
+}
+
+#search:focus {
+    outline: none;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    html {
+        background-color: #18181A;
+    }
+
+    body {
+        color: #00ff41;
+    }
+
+    a {
+        color: #00ff41;
+    }
+
+    .card-front {
+        background-color: #18181A;
+        border-color: #00ff41;
+    }
+
+    .card-back {
+        background-color: #18181A;
+        border-color: #00ff41;
+    }
+
+    .input {
+        color: #00ff41;
+    }
+
+    #topic[contenteditable]:empty::before, #query[contenteditable]:empty::before {
+        color: rgba(0, 255, 0, 0.5);
+    }
+
+    #search {
+        background-color: #18181A;
+        color: #00ff41;
+    }
+}
+
+/* iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    body {
+      font-weight: 500;
+    }
+
+    .logo, .input {
+        font-weight: 800;
+    }
+
+    #begin, #question, #retry, #static {
+        font-weight: 800;
+    }   
+}
