@@ -15,7 +15,7 @@ var fuse;
 // Routes
 router.get('/ascii', (request, response) => {
     const { query } = request.query;
-    const result = fs.readFileSync('./ascii/' + query  + ".txt");
+    const result = fs.readFileSync('../ascii/' + query  + ".txt");
 
     response.json(result.toString());
 });
