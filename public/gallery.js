@@ -56,7 +56,7 @@ async function focusSearch() {
         if (event.which == 13 && $("#search").val().trim() != "" && $("#search").focus()) {
             $("#search").blur();
 
-            const result = await fetch(baseURL + 'search?query=' + $("#search").val());
+            const result = await fetch(baseURL + 'search?query=' + $("#search").val(), { method: "GET" });
             galleryContent = await result.json();
 
             populateGallery(galleryContent);

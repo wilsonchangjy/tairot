@@ -24,7 +24,7 @@ const auth = getAuth(app);
 // Functions
 function authFirebase() {
     if (!auth.currentUser) signInAnonymously(auth).then(() =>{
-        console.log(auth.currentUser);
+        //console.log(auth.currentUser);
     });
 }
 

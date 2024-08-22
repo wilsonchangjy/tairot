@@ -1,7 +1,6 @@
 // Variables
 const cardCount = 3;
 var cardArray;
-var deckObject;
 var deckArray = [];
 var cardHistory = [];
 
@@ -91,11 +90,7 @@ async function dealCards() {
         }, 1000 * index);
     });
 
-    deckArray = [];
-
-    for (var child in deckObject) {
-        deckArray.push(child);
-    }
+    deckArray = [...tarotArray];
 }
 
 async function readCard(cardName, index, reversed) {
@@ -108,13 +103,9 @@ async function readCard(cardName, index, reversed) {
 
 async function readTextFile(cardName) {
     const fileName = cardName.toLowerCase().replace(/\s/g, '');
-    var ascii;
+    const ascii = await fetch(baseURL + "ascii?query=" + fileName, { method: "GET" });
 
-    await fetch(baseURL.replace('/api', '') + "ascii/" + fileName + ".txt")
-    .then(response => response.text())
-    .then((data) => ascii = data);
-
-    return ascii;
+    return await ascii.json();
 }
 
 // Class Object

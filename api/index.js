@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const Fuse = require('fuse.js');
+const fs = require('fs');
 
 const firebase = require('../firebase.js');
 const openai = require('../openAI.js');
@@ -12,6 +13,13 @@ var fuse;
 // Initialise
 
 // Routes
+router.get('/ascii', (request, response) => {
+    const { query } = request.query;
+    const result = fs.readFileSync('./ascii/' + query  + ".txt");
+
+    response.json(result.toString());
+});
+
 router.get('/search', (request, response) => {
     const { query } = request.query;
     const search = fuse.search(query);
