@@ -13,8 +13,6 @@ app.use(express.raw({type: '*/*'}));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', api);
-app.use('/ascii', express.static('ascii'));
-app.use('/tarot.json', express.static('tarot.json'));
 
 app.set('etag', false);
 app.use((request, response, next) => {
