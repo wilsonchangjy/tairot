@@ -28,7 +28,7 @@ function populateGallery(content) {
         gallery.append(galleryItem);
     }
 
-    $(".gallery-item").on('click', function() {
+    $(".gallery-item").on('click touchstart', function() {
         $(this).toggleClass("active");
     });
 }

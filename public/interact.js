@@ -2,7 +2,7 @@
 const interactive = $(".interactive");
 const begin = $("#begin");
 const logo = $(".logo");
-const baseURL = 'https://tairot-two.vercel.app/api/';
+const baseURL = 'https://tairot.app/api/';
 // const baseURL = 'http://localhost:8888/api/';
 
 // Initialise
