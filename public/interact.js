@@ -2,7 +2,7 @@
 const interactive = $(".interactive");
 const begin = $("#begin");
 const logo = $(".logo");
-const baseURL = 'https://tairot.app/api/';
+const baseURL = window.location.href + 'api/';
 
 // Initialise
 fetch(baseURL + 'firebase/auth');
