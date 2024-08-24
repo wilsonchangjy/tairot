@@ -173,20 +173,6 @@ p  {
     gap: 24px;
 }
 
-.gallery-item {
-    overflow: hidden;
-    display: -webkit-box;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-}
-
-.gallery-item.active {
-    line-clamp: none;
-    -webkit-line-clamp: none;
-
-    color: red;
-}
 
 .query-topic {
     padding: 8px 0;
@@ -231,6 +217,10 @@ p  {
     padding: 32px 0;
 }
 
+.search {
+    overflow: hidden;
+}
+
 /* ID */
 #begin, #question, #retry {
     font-size: 20px;
@@ -257,9 +247,7 @@ p  {
 }
 
 #topic {
-    margin-left: 32px;
     text-align: center;
-    width: calc(100% - 64px);
 }
 
 #back {
@@ -278,6 +266,11 @@ p  {
 
 #search:focus {
     outline: none;
+}
+
+::placeholder {
+    color: #0000ff;
+    opacity: 0.5;
 }
 
 /* Dark Mode */
@@ -315,6 +308,11 @@ p  {
     #search {
         background-color: #18181A;
         color: #00ff41;
+    }
+
+    ::placeholder {
+        color: #00ff41;
+        opacity: 0.5;
     }
 }
 

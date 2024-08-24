@@ -91,12 +91,12 @@ function streamText(text, target) {
     const pseudoStream = setInterval(() => {
         completeText += text.charAt(index);
         target.text(completeText);
-        $(".card-front").scrollTop($(".card-front")[0].scrollHeight);
-
+        
         index++;
 
+        if ((index % 33) == 0) $(".card-front").scrollTop($(".card-front")[0].scrollHeight);
         if (index == text.length) clearInterval(pseudoStream), endResponse();
-    }, 15);
+    }, 17);
 }
 
 function endResponse() {

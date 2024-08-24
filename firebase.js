@@ -1,6 +1,6 @@
 // Dependencies
 const { initializeApp } = require('firebase/app');
-const { getDatabase, ref, get, push, set, increment, update } = require('firebase/database');
+const { getDatabase, ref, get, push, set, increment, update, query, limitToLast, startAfter, startAt, orderByKey, limitToFirst } = require('firebase/database');
 require('dotenv').config();
 
 // Variables
@@ -44,5 +44,15 @@ async function readFromFirebase(path) {
     return data;
 }
 
+async function viewGallery(index) {
+    const reference = ref(database, "gallery");
+    const scope = query(reference, orderByKey(), startAt(index), limitToLast(20));
+
+    const snapshot = await get(scope);
+    const data = snapshot.val();
+
+    return data;
+}
+
 // Module
-module.exports = { writeToFirebase, updateStatistics, readFromFirebase };
+module.exports = { writeToFirebase, updateStatistics, readFromFirebase, viewGallery };

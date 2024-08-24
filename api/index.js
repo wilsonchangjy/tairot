@@ -34,15 +34,10 @@ router.get('/search', (request, response) => {
     response.json(results);
 });
 
-router.get('/firebase/auth', (request, response) => {
-    firebase.authFirebase();
-    return response.status(400);
-});
-
 router.get('/firebase/read', async (request, response) => {
     const { path } = request.query;
 
-    const data = await firebase.readFromFirebase(path)
+    const data = await firebase.readFromFirebase(path);
     response.json(data);
 
     if (path == "gallery") {
@@ -66,14 +61,25 @@ router.get('/firebase/read', async (request, response) => {
     }
 });
 
+router.get('/firebase/read/gallery', async (request, response) => {
+    const { index } = request.query;
+
+    const data = await firebase.viewGallery(index);
+    response.json(data);
+});
+
 router.post('/firebase/write', async (request, response) => {
     const { parcel } = request.body;
     firebase.writeToFirebase(parcel);
+
+    return response.status(200);
 });
 
 router.post('/firebase/update', (request, response) => {
     const { parcel } = request.body;
     firebase.updateStatistics(parcel);
+
+    return response.status(200);
 });
 
 router.post('/openai/prompt', async (request, response) => {

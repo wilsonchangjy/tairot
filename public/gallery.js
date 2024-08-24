@@ -3,8 +3,8 @@ const gallery = $(".gallery");
 const baseURL = (window.location.href).replace("gallery.html", 'api/');
 
 // Initialise
-const galleryData = await fetch(baseURL + 'firebase/read?path=gallery');
-var galleryContent = Object.values(await galleryData.json());
+const galleryData = (await fetch(baseURL + 'firebase/read/gallery?index=0')).json();
+var galleryContent = Object.values(await galleryData);
 populateGallery(galleryContent.reverse());
 
 // Functions
@@ -13,7 +13,7 @@ function populateGallery(content) {
 
     for (var conversation in content) {
         const messages = galleryContent[conversation];
-        const galleryItem = document.createElement("span");
+        const galleryItem = document.createElement("div");
         galleryItem.className = "gallery-item";
     
         for (var index in messages) {
@@ -24,12 +24,13 @@ function populateGallery(content) {
     
             galleryItem.append(messageItem);
         }
-    
+
+        $clamp(galleryItem , { clamp: 3 });
         gallery.append(galleryItem);
     }
 
     $(".gallery-item").on('click', function() {
-        $(this).toggleClass("active");
+        $(this).prop('style').removeProperty("-webkit-line-clamp");
     });
 }
 
