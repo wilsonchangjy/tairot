@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Fuse = require('fuse.js');
 const fs = require('fs');
+const path = require('path');
 
 const firebase = require('../firebase.js');
 const openai = require('../openAI.js');
@@ -15,9 +16,10 @@ var fuse;
 // Routes
 router.get('/ascii', async (request, response) => {
     const { card } = request.query;
-    const result = fs.readFileSync('/ascii/' + card + ".txt");
+    const filePath = path.join(process.cwd(), '/ascii/' + card + '.txt');
+    const file = fs.readFileSync(filePath);
 
-    response.json(result.toString());
+    response.json(file.toString());
 });
 
 router.get('/search', (request, response) => {

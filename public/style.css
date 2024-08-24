@@ -184,6 +184,8 @@ p  {
 .gallery-item.active {
     line-clamp: none;
     -webkit-line-clamp: none;
+
+    color: red;
 }
 
 .query-topic {
