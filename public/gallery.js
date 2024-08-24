@@ -13,7 +13,7 @@ function populateGallery(content) {
 
     for (var conversation in content) {
         const messages = galleryContent[conversation];
-        const galleryItem = document.createElement("div");
+        const galleryItem = document.createElement("span");
         galleryItem.className = "gallery-item";
     
         for (var index in messages) {
@@ -28,7 +28,7 @@ function populateGallery(content) {
         gallery.append(galleryItem);
     }
 
-    $(".gallery-item").on('click touchstart', function() {
+    $(".gallery-item").on('click', function() {
         $(this).toggleClass("active");
     });
 }

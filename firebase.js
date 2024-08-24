@@ -1,7 +1,6 @@
 // Dependencies
 const { initializeApp } = require('firebase/app');
 const { getDatabase, ref, get, push, set, increment, update } = require('firebase/database');
-const { getAuth, signInAnonymously } = require('firebase/auth');
 require('dotenv').config();
 
 // Variables
@@ -19,15 +18,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase();
-const auth = getAuth(app);
 
 // Functions
-function authFirebase() {
-    if (!auth.currentUser) signInAnonymously(auth).then(() =>{
-        //console.log(auth.currentUser);
-    });
-}
-
 function writeToFirebase(data) {
     const reference = ref(database, "gallery/");
 
@@ -53,4 +45,4 @@ async function readFromFirebase(path) {
 }
 
 // Module
-module.exports = { authFirebase, writeToFirebase, updateStatistics, readFromFirebase };
+module.exports = { writeToFirebase, updateStatistics, readFromFirebase };

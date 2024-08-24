@@ -13,9 +13,9 @@ var fuse;
 // Initialise
 
 // Routes
-router.get('/ascii', (request, response) => {
-    const { query } = request.query;
-    const result = fs.readFileSync('../ascii/' + query  + ".txt");
+router.get('/ascii', async (request, response) => {
+    const { card } = request.query;
+    const result = fs.readFileSync('./ascii/' + card + ".txt");
 
     response.json(result.toString());
 });

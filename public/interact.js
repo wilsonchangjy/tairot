@@ -2,10 +2,10 @@
 const interactive = $(".interactive");
 const begin = $("#begin");
 const logo = $(".logo");
-const baseURL = window.location.href + 'api/';
+var baseURL = (window.location.href).replace('index.html', 'api/');;
 
 // Initialise
-fetch(baseURL + 'firebase/auth');
+if (!baseURL.includes('api/')) baseURL += 'api/';
 
 // Functions
 begin.click(function() {
@@ -33,6 +33,7 @@ function inputKeyPress() {
     }
     else if (keyPress == 13 && $("#query").text().trim() != "" && $("#query").focus()) {
         $("#query").blur();
+        $(".GPT-message").last().remove();
         query = $("#query").text();
         cardHistory.push(query);
 

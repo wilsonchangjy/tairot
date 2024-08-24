@@ -4,7 +4,7 @@ var query;
 var chatHistory = [];
 
 const topicBuffer = ["Ah yes, I see it now...", "Hmm, that's interesting...", "Well, I certainly didn't expect this card...", "Gimme a second...", "It's all falling into place now..."];
-const queryBuffer = ["Hmm, facinating...", "Oh? Let me think about it...", "Sigh, how should I put this...", "Mm hmm...", "Uh huh, okay..."];
+const queryBuffer = ["Hmm, facinating...", "Oh? Let me think about it...", "Sigh, how should I put this...", "Mm hmm...", "Uh huh, okay...", "Yeah, well..."];
 const tarotArray = ["The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor", "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
                     "Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance", "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgement", "The World",
                     "Ace of Cups", "Two of Cups", "Three of Cups", "Four of Cups", "Five of Cups", "Six of Cups", "Seven of Cups", "Eight of Cups", "Nine of Cups", "Ten of Cups",

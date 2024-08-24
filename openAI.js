@@ -5,7 +5,7 @@ require('dotenv').config();
 // Variables
 var systemMessage = {
     role: "system",
-    content: "Keep responses within 480 characters, and speak like an old and wise fortune teller, but not too mysterious. I will tell you which tarot cards I have pulled, and be candid if it is looking bad. Direct all responses in the context of divination.",
+    content: "Keep responses within 480 characters, and speak like a seasoned and wise fortune teller, but not too ambiguous or mysterious. I will tell you which tarot cards I have pulled, and be candid if it is unfavourable. Direct all responses in the context of divination.",
 }
 
 const openai = new OpenAI({

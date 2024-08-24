@@ -103,7 +103,7 @@ async function readCard(cardName, index, reversed) {
 
 async function readTextFile(cardName) {
     const fileName = cardName.toLowerCase().replace(/\s/g, '');
-    const ascii = await fetch(baseURL + "ascii?query=" + fileName, { method: "GET" });
+    const ascii = await fetch(baseURL + "ascii?card=" + fileName, { method: "GET" });
 
     return await ascii.json();
 }
