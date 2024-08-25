@@ -1,5 +1,6 @@
 // Variables
 const gallery = $(".gallery");
+const pagination = $("#pagination");
 const baseURL = (window.location.href).replace("gallery.html", 'api/');
 const sortBy = () => {
     if ($("#oldest").hasClass("active")) return "oldest";
@@ -9,10 +10,13 @@ let scrollLock = false;
 
 // Initialise
 const galleryData = (await fetch(baseURL + 'firebase/read/gallery?index=newest-20')).json();
+const galleryStats = await fetch(baseURL + 'firebase/read?path=stats');
 var galleryContent = Object.values(await galleryData);
+var galleryCount = await galleryStats.json();
 
 gallery.empty();
 populateGallery(galleryContent.reverse());
+pagination.text(`Showing 20 of ${galleryCount.gallery}`);
 
 // Functions
 function populateGallery(content) {
@@ -82,6 +86,8 @@ async function focusSearch() {
 
                 $(".sort p").removeClass("active");
                 $(".sort p").addClass("disabled");
+
+                pagination.text(`Showing ${galleryContent.length} of ${galleryContent.length}`);
             }
             else if ($("#search").val().trim() == "") {
                 gallery.removeClass("search");
@@ -91,6 +97,8 @@ async function focusSearch() {
 
                 $(".sort p").removeClass("disabled");
                 $("#newest").addClass("active");
+
+                pagination.text(`Showing 20 of ${galleryContent.length}`);
             }
             
             $("#search").blur();
@@ -104,14 +112,17 @@ async function infiniteLoad(index) {
     if (gallery.hasClass("search")) return;
     scrollLock = true;
 
+    const endIndex = index + 20;
     const sorting = sortBy();
-    const newData = (await fetch(baseURL + `firebase/read/gallery?index=${sorting}-${index + 20}`)).json();
+    const newData = (await fetch(baseURL + `firebase/read/gallery?index=${sorting}-${endIndex}`)).json();
     const totalContent = Object.values(await newData);
 
     if (sorting == "newest") totalContent.reverse();
-    const newContent = totalContent.slice(index, index + 20);
+    const newContent = totalContent.slice(index, endIndex);
 
     populateGallery(newContent);
+    pagination.text(`Showing ${(endIndex < galleryCount.gallery ? endIndex : galleryCount.gallery)} of ${galleryCount.gallery}`);
+
     scrollLock = false;
 }
 

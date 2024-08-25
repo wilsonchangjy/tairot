@@ -238,6 +238,11 @@ class OpenCard {
                 headers: { "Content-Type": 'application/json' },
                 body: JSON.stringify({ parcel: cardHistory })
             });
+            fetch(baseURL + 'firebase/update', {
+                method: "POST",
+                headers: { "Content-Type": 'application/json' },
+                body: JSON.stringify({ parcel: "gallery" })
+            });
         }
 
         setTimeout(() => {

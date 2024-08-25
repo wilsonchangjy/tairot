@@ -166,7 +166,7 @@ p  {
 }
 
 .gallery {
-    margin-bottom: 64px;
+    margin-bottom: 32px;
     display: flex;
     flex-direction: column;
 
@@ -273,6 +273,10 @@ p  {
 ::placeholder {
     color: #0000ff;
     opacity: 0.5;
+}
+
+#pagination {
+    margin-bottom: 48px;
 }
 
 /* Dark Mode */
