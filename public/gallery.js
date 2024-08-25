@@ -9,6 +9,7 @@ const sortBy = () => {
 let scrollLock = false;
 
 // Initialise
+pagination.hide();
 const galleryData = (await fetch(baseURL + 'firebase/read/gallery?index=newest-20')).json();
 const galleryStats = await fetch(baseURL + 'firebase/read?path=stats');
 var galleryContent = Object.values(await galleryData);
@@ -17,6 +18,7 @@ var galleryCount = await galleryStats.json();
 gallery.empty();
 populateGallery(galleryContent.reverse());
 pagination.text(`Showing 20 of ${galleryCount.gallery}`);
+pagination.show();
 
 // Functions
 function populateGallery(content) {
@@ -127,15 +129,22 @@ async function infiniteLoad(index) {
 }
 
 // Infinite Scroll
-$(window).on("scroll", () => {
+$(window).on("scroll", (event) => {
     if (scrollLock) return;
-
-	const scrollHeight = $(document).height();
-	const scrollPosition = $(window).height() + $(window).scrollTop();
-
-	if (((scrollHeight - scrollPosition) / scrollHeight).toFixed(3) == 0) infiniteLoad($(".gallery-item").length);
+    else if (pagination.isVisible()) infiniteLoad($(".gallery-item").length);
 });
 
+$.fn.isVisible = function() {
+    var elementTop = $(this).offset().top;
+    var elementBottom = elementTop + $(this).outerHeight();
+
+    var viewportTop = $(window).scrollTop();
+    var viewportBottom = viewportTop + $(window).height();
+
+    return elementBottom > viewportTop && elementTop < viewportBottom;
+};
+
+// Event Listeners
 $("#back").click(scrollTop);
 $(".sort p").click(toggleSort);
 $("#search-button").click(focusSearch);
