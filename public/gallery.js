@@ -1,18 +1,23 @@
 // Variables
 const gallery = $(".gallery");
 const baseURL = (window.location.href).replace("gallery.html", 'api/');
+const sortBy = () => {
+    if ($("#oldest").hasClass("active")) return "oldest";
+    else return "newest";
+};
+let scrollLock = false;
 
 // Initialise
-const galleryData = (await fetch(baseURL + 'firebase/read/gallery?index=0')).json();
+const galleryData = (await fetch(baseURL + 'firebase/read/gallery?index=newest-20')).json();
 var galleryContent = Object.values(await galleryData);
+
+gallery.empty();
 populateGallery(galleryContent.reverse());
 
 // Functions
 function populateGallery(content) {
-    gallery.empty();
-
     for (var conversation in content) {
-        const messages = galleryContent[conversation];
+        const messages = content[conversation];
         const galleryItem = document.createElement("div");
         galleryItem.className = "gallery-item";
     
@@ -25,7 +30,7 @@ function populateGallery(content) {
             galleryItem.append(messageItem);
         }
 
-        $clamp(galleryItem , { clamp: 3 });
+        $clamp(galleryItem, { clamp: 3 });
         gallery.append(galleryItem);
     }
 
@@ -39,12 +44,27 @@ function scrollTop() {
     document.documentElement.scrollTop = 0;
 }
 
-function toggleSort() {
+async function toggleSort() {
     gallery.empty();
-    populateGallery(galleryContent.reverse());
-
+    
     $("#oldest").toggleClass("active");
-    $("#latest").toggleClass("active");
+    $("#newest").toggleClass("active");
+
+    if (gallery.hasClass("search")) populateGallery(galleryContent.reverse());
+    else {
+        const sorting = sortBy();
+        const galleryData = (await fetch(baseURL + `firebase/read/gallery?index=${sorting}-20`)).json();
+        galleryContent = Object.values(await galleryData);
+    
+        switch(sorting) {
+            case "newest":
+                populateGallery(galleryContent.reverse());
+                break;
+            case "oldest":
+                populateGallery(galleryContent);
+                break;
+        }
+    }
 }
 
 async function focusSearch() {
@@ -56,16 +76,54 @@ async function focusSearch() {
     $("#search").on("keydown", async (event) => {
         if (event.which == 13 && $("#search").val().trim() != "" && $("#search").focus()) {
             $("#search").blur();
+            gallery.addClass("search");
 
             const result = await fetch(baseURL + 'search?query=' + $("#search").val(), { method: "GET" });
             galleryContent = await result.json();
 
+            gallery.empty();
             populateGallery(galleryContent);
+
+            if (sortBy() == "oldest") $("#newest").addClass('active'), $("#oldest").removeClass('active');
+        }
+        else if (event.which == 13 && $("#search").val().trim() == "" && $("#search").focus()) {
+            $("#search").blur();
+            gallery.removeClass("search");
+
+            var galleryContent = Object.values(await galleryData);
+
+            gallery.empty();
+            populateGallery(galleryContent.reverse());
         }
     });
 }
 
+async function infiniteLoad(index) {
+    if (gallery.hasClass("search")) return;
+    scrollLock = true;
+
+    const sorting = sortBy();
+    const newData = (await fetch(baseURL + `firebase/read/gallery?index=${sorting}-${index + 20}`)).json();
+    const totalContent = Object.values(await newData);
+
+    if (sorting == "newest") totalContent.reverse();
+    const newContent = totalContent.slice(index, index + 20);
+
+    populateGallery(newContent);
+    scrollLock = false;
+}
+
+// Infinite Scroll
+$(window).on("scroll", () => {
+    if (scrollLock) return;
+
+	const scrollHeight = $(document).height();
+	const scrollPosition = $(window).height() + $(window).scrollTop();
+
+	if (((scrollHeight - scrollPosition) / scrollHeight).toFixed(3) == 0) infiniteLoad($(".gallery-item").length);
+});
+
 $("#back").click(scrollTop);
 $("#oldest").click(toggleSort);
-$("#latest").click(toggleSort);
+$("#newest").click(toggleSort);
 $("#search-button").click(focusSearch);

@@ -22,10 +22,27 @@ router.get('/ascii', async (request, response) => {
     response.json(file.toString());
 });
 
-router.get('/search', (request, response) => {
+router.get('/search', async (request, response) => {
     const { query } = request.query;
+
+    const searchList = [];
+    const data = await firebase.readFromFirebase("gallery");
+
+    Object.keys(data).forEach(key => {
+        var searchItem = {};
+        const galleryItem = data[key];
+
+        for (var index = 0; index < galleryItem.length; index++) {
+            let newIndex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+            searchItem[`${newIndex[index]}`] = galleryItem[index];
+        }
+        
+        searchList.push(searchItem);
+    })
+
+    fuse = new Fuse(searchList, { threshold: 0.4, keys: ['0', '1', '2', '3'] });
     const search = fuse.search(query);
-    var results = [];
+    const results = [];
 
     search.forEach((reading) => {
         results.push(reading.item);
@@ -39,32 +56,13 @@ router.get('/firebase/read', async (request, response) => {
 
     const data = await firebase.readFromFirebase(path);
     response.json(data);
-
-    if (path == "gallery") {
-        var searchList = [];
-
-        Object.keys(data).forEach(key => {
-            var searchItem = {};
-            const galleryItem = data[key];
-
-            for (var index = 0; index < galleryItem.length; index++) {
-                let newIndex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-                searchItem[`${newIndex[index]}`] = galleryItem[index];
-            }
-            
-            searchList.push(searchItem);
-        })
-
-        fuse = new Fuse(searchList, {
-            keys: ['0', '1', '2', '3']
-        });
-    }
 });
 
 router.get('/firebase/read/gallery', async (request, response) => {
     const { index } = request.query;
+    const indexArray = index.split('-');
 
-    const data = await firebase.viewGallery(index);
+    const data = await firebase.viewFromGallery(indexArray[0], indexArray[1]);
     response.json(data);
 });
 
