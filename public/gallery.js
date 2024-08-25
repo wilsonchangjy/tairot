@@ -47,8 +47,7 @@ function scrollTop() {
 async function toggleSort() {
     gallery.empty();
     
-    $("#oldest").toggleClass("active");
-    $("#newest").toggleClass("active");
+    $(".sort p").toggleClass("active");
 
     if (gallery.hasClass("search")) populateGallery(galleryContent.reverse());
     else {
@@ -74,26 +73,28 @@ async function focusSearch() {
 
     $("#search").focus();
     $("#search").on("keydown", async (event) => {
-        if (event.which == 13 && $("#search").val().trim() != "" && $("#search").focus()) {
+        if (event.which == 13 && $("#search").focus()) {
+            if ($("#search").val().trim() != "") {
+                gallery.addClass("search");
+    
+                const result = await fetch(baseURL + 'search?query=' + $("#search").val(), { method: "GET" });
+                galleryContent = await result.json();
+
+                $(".sort p").removeClass("active");
+                $(".sort p").addClass("disabled");
+            }
+            else if ($("#search").val().trim() == "") {
+                gallery.removeClass("search");
+    
+                galleryContent = Object.values(await galleryData);
+                galleryContent.reverse();
+
+                $(".sort p").removeClass("disabled");
+                $("#newest").addClass("active");
+            }
             $("#search").blur();
-            gallery.addClass("search");
-
-            const result = await fetch(baseURL + 'search?query=' + $("#search").val(), { method: "GET" });
-            galleryContent = await result.json();
-
             gallery.empty();
             populateGallery(galleryContent);
-
-            if (sortBy() == "oldest") $("#newest").addClass('active'), $("#oldest").removeClass('active');
-        }
-        else if (event.which == 13 && $("#search").val().trim() == "" && $("#search").focus()) {
-            $("#search").blur();
-            gallery.removeClass("search");
-
-            var galleryContent = Object.values(await galleryData);
-
-            gallery.empty();
-            populateGallery(galleryContent.reverse());
         }
     });
 }
@@ -124,6 +125,5 @@ $(window).on("scroll", () => {
 });
 
 $("#back").click(scrollTop);
-$("#oldest").click(toggleSort);
-$("#newest").click(toggleSort);
+$(".sort p").click(toggleSort);
 $("#search-button").click(focusSearch);

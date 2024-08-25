@@ -212,6 +212,12 @@ p  {
     pointer-events: none;
 }
 
+.sort p.disabled {
+    opacity: 0.5;
+    text-decoration: none;
+    pointer-events: none;
+}
+
 .stats {
     padding: 32px 0;
 }
