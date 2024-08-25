@@ -166,7 +166,7 @@ p  {
 }
 
 .gallery {
-    margin-bottom: 48px;
+    margin-bottom: 32px;
     display: flex;
     flex-direction: column;
 
