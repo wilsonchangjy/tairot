@@ -52,23 +52,19 @@ function scrollTop() {
 
 async function toggleSort() {
     gallery.empty();
-    
     $(".sort p").toggleClass("active");
 
-    if (gallery.hasClass("search")) populateGallery(galleryContent.reverse());
-    else {
-        const sorting = sortBy();
-        const galleryData = (await fetch(baseURL + `firebase/read/gallery?index=${sorting}-20`)).json();
-        galleryContent = Object.values(await galleryData);
-    
-        switch(sorting) {
-            case "newest":
-                populateGallery(galleryContent.reverse());
-                break;
-            case "oldest":
-                populateGallery(galleryContent);
-                break;
-        }
+    const sorting = sortBy();
+    const galleryData = (await fetch(baseURL + `firebase/read/gallery?index=${sorting}-20`)).json();
+    galleryContent = Object.values(await galleryData);
+
+    switch(sorting) {
+        case "newest":
+            populateGallery(galleryContent.reverse());
+            break;
+        case "oldest":
+            populateGallery(galleryContent);
+            break;
     }
 }
 
