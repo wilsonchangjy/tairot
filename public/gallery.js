@@ -100,7 +100,7 @@ async function focusSearch() {
                 $(".sort p").removeClass("disabled");
                 $("#newest").addClass("active");
 
-                pagination.text(`Showing 20 of ${galleryContent.length}`);
+                pagination.text(`Showing 20 of ${galleryCount.gallery}`);
             }
             
             $("#search").blur();
