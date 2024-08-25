@@ -92,6 +92,7 @@ async function focusSearch() {
                 $(".sort p").removeClass("disabled");
                 $("#newest").addClass("active");
             }
+            
             $("#search").blur();
             gallery.empty();
             populateGallery(galleryContent);
