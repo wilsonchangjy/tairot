@@ -6,19 +6,16 @@ const sortBy = () => {
     if ($("#oldest").hasClass("active")) return "oldest";
     else return "newest";
 };
-let scrollLock = false;
 
 // Initialise
-pagination.hide();
 const galleryData = (await fetch(baseURL + 'firebase/read/gallery?index=newest-20')).json();
 const galleryStats = await fetch(baseURL + 'firebase/read?path=stats');
 var galleryContent = Object.values(await galleryData);
 var galleryCount = await galleryStats.json();
 
 gallery.empty();
+pagination.text("loading...");
 populateGallery(galleryContent.reverse());
-pagination.text(`Showing 20 of ${galleryCount.gallery}`);
-pagination.show();
 
 // Functions
 function populateGallery(content) {
@@ -107,8 +104,8 @@ async function focusSearch() {
 }
 
 async function infiniteLoad(index) {
-    if (gallery.hasClass("search")) return;
-    scrollLock = true;
+    if (gallery.hasClass("search") || gallery.hasClass("loading")) return;
+    gallery.addClass("loading");
 
     const endIndex = index + 20;
     const sorting = sortBy();
@@ -121,21 +118,21 @@ async function infiniteLoad(index) {
     populateGallery(newContent);
     pagination.text(`Showing ${(endIndex < galleryCount.gallery ? endIndex : galleryCount.gallery)} of ${galleryCount.gallery}`);
 
-    scrollLock = false;
+    gallery.removeClass("loading");
 }
 
 // Infinite Scroll
-$(window).on("scroll", (event) => {
-    if (scrollLock) return;
+$(window).on("scroll", () => {
+    if (gallery.hasClass("loading")) return;
     else if (pagination.isVisible()) infiniteLoad($(".gallery-item").length);
 });
 
 $.fn.isVisible = function() {
-    var elementTop = $(this).offset().top;
-    var elementBottom = elementTop + $(this).outerHeight();
+    const elementTop = $(this).offset().top;
+    const elementBottom = elementTop + $(this).outerHeight();
 
-    var viewportTop = $(window).scrollTop();
-    var viewportBottom = viewportTop + $(window).height();
+    const viewportTop = $(window).scrollTop();
+    const viewportBottom = viewportTop + $(window).height();
 
     return elementBottom > viewportTop && elementTop < viewportBottom;
 };
