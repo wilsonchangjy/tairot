@@ -9,13 +9,13 @@ const sortBy = () => {
 
 // Initialise
 const galleryData = (await fetch(baseURL + 'firebase/read/gallery?index=newest-20')).json();
-const galleryStats = await fetch(baseURL + 'firebase/read?path=stats');
+const statsData = await fetch(baseURL + 'firebase/read?path=stats');
 var galleryContent = Object.values(await galleryData);
-var galleryCount = await galleryStats.json();
+var stats = await statsData.json();
 
 gallery.empty();
-pagination.text("loading...");
 populateGallery(galleryContent.reverse());
+pagination.text(`Showing 20 of ${stats.gallery}`);
 
 // Functions
 function populateGallery(content) {
@@ -54,8 +54,8 @@ async function toggleSort() {
     const sorting = sortBy();
     const galleryData = (await fetch(baseURL + `firebase/read/gallery?index=${sorting}-20`)).json();
     galleryContent = Object.values(await galleryData);
-
-    pagination.text(`Showing 20 of ${galleryCount.gallery}`);
+    
+    pagination.text(`Showing 20 of ${stats.gallery}`);
 
     switch(sorting) {
         case "newest":
@@ -95,7 +95,7 @@ async function focusSearch() {
                 $(".sort p").removeClass("disabled");
                 $("#newest").addClass("active");
 
-                pagination.text(`Showing 20 of ${galleryCount.gallery}`);
+                pagination.text(`Showing 20 of ${stats.gallery}`);
             }
             
             $("#search").blur();
@@ -118,8 +118,7 @@ async function infiniteLoad(index) {
     const newContent = totalContent.slice(index, endIndex);
 
     populateGallery(newContent);
-    pagination.text(`Showing ${(endIndex < galleryCount.gallery ? endIndex : galleryCount.gallery)} of ${galleryCount.gallery}`);
-
+    pagination.text(`Showing ${(endIndex < stats.gallery ? endIndex : stats.gallery)} of ${stats.gallery}`);
     gallery.removeClass("loading");
 }
 
