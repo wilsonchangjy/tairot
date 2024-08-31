@@ -55,6 +55,8 @@ async function toggleSort() {
     const galleryData = (await fetch(baseURL + `firebase/read/gallery?index=${sorting}-20`)).json();
     galleryContent = Object.values(await galleryData);
 
+    pagination.text(`Showing 20 of ${galleryCount.gallery}`);
+
     switch(sorting) {
         case "newest":
             populateGallery(galleryContent.reverse());
