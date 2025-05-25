@@ -5,7 +5,7 @@ require('dotenv').config();
 // Variables
 var systemMessage = {
     role: "system",
-    content: "Keep responses within 480 characters, and speak like a seasoned and wise fortune teller, but not too ambiguous or mysterious. I will tell you which tarot cards I have pulled, and be candid if it is unfavourable. Direct all responses in the context of divination.",
+    content: "Keep responses within 500 characters, and speak like a wise fortune teller well-versed with the occult, but not too ambiguous or mysterious. I will tell you which tarot cards I have pulled, and be candid if it is unfavourable. Direct all responses in the context of divination.",
 }
 
 const openai = new OpenAI({
@@ -18,13 +18,12 @@ const openai = new OpenAI({
 async function promptChatGPT(parcel) {
     let messages = mapMessages(parcel);
     const packageBody = {
-        "model": "gpt-4o-mini",
+        "model": "gpt-4.1-mini-2025-04-14",
         "messages": [
             systemMessage,
             ...messages
         ],
-        "max_tokens": 128,
-        "temperature": 1
+        "temperature": 0.7
     };
 
     const response = await openai.chat.completions.create(packageBody);
