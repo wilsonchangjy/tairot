@@ -18,7 +18,7 @@ This project is developed using HTML, CSS and JavaScript (including JQuery), on 
 - Kiro Risk's Fuse.js https://www.fusejs.io/; a lightweight library that enables fuzzy-searches, which makes navigating the anonymous readings easier as the Gallery continues to expand. While it works brilliantly for the most part, some tweaks are needed as the breadth of the search is a little way too generous in my opinion.
 
 # Changelog
-**Version 1.5**
+**Version 1.6**
 The Anniversary Update, and also the largest one by far. Updated to GPT 4 Omni Mini, and added a couple of features such as a fuzzy Search function within the Gallery, "Streaming" responses from the AI, as well as implementing Infinite Scroll loading for the Gallery.
 
 **Version 1.5**
