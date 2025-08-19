@@ -1,6 +1,6 @@
 {
   "name": "tairot",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "A virtual tarot card reading experience powered by AI.",
   "main": "app.js",
   "scripts": {

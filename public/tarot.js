@@ -40,7 +40,7 @@ function clearHistory(type) {
 }
 
 async function topicResponse(input, index, reversed) {
-    var countArray = ["final", "second", "first"];
+    var countArray = ["last", "second", "first"];
 
     var intro = `I wish to do a tarot card reading on "${topic}", and `;
     var card = `the ${countArray[index]} card I pulled is the ${input}`;

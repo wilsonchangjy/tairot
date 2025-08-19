@@ -85,7 +85,10 @@ async function dealCards() {
             element.style.transform += "translateX(" + (Math.random() * (15 - -15) + -15) + "px)";
             element.classList.add("active");
             element.addEventListener("click", () => {
-                flipCard(index, element);
+                const cardCheck = tarotArray.length - (cardCount - cardArray.length);
+                
+                if (cardCheck != deckArray.length) return;
+                else flipCard(index, element);
             });
         }, 1000 * index);
     });
