@@ -83,14 +83,14 @@ router.post('/firebase/write', checkOrigin, async (request, response) => {
     const { parcel } = request.body;
     firebase.writeToFirebase(parcel);
 
-    return response.status(200);
+    return response.sendStatus(200);
 });
 
 router.post('/firebase/update', checkOrigin, (request, response) => {
     const { parcel } = request.body;
     firebase.updateStatistics(parcel);
 
-    return response.status(200);
+    return response.sendStatus(200);
 });
 
 router.post('/openai/prompt', checkOrigin, async (request, response) => {

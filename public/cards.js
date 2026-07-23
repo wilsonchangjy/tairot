@@ -3,19 +3,19 @@ const cardCount = 3;
 var cardArray;
 var deckArray = [];
 var cardHistory = [];
+var cardsRead = 0;
+var revealing = false;
 
 // Initialise
 
 // Functions
-function flipCard(index, element) {
+function flipCard(element) {
     element.classList.remove("active");
 
-    drawCard(index, shuffleCards());
+    const position = ++cardsRead;
+    drawCard(position, shuffleCards());
 
-    setTimeout(function() {
-        element.remove();
-        cardArray.splice(index);
-    }, 1000);
+    setTimeout(function() { element.remove() }, 1000);
 }
 
 function shuffleCards() {    
@@ -43,22 +43,22 @@ function shuffleCards() {
     return chosenCard;
 }
 
-async function drawCard(index, cardName) {
+async function drawCard(position, cardName) {
     console.log(cardName);
 
     const reversed = Math.random() > 0.5 ? true : false;
     const cardArt = await readTextFile(cardName);
 
-    const card = new OpenCard(cardName, index, reversed, cardArt);
+    const card = new OpenCard(cardName, position, reversed, cardArt);
     interactive.append(card.element);
 
-    readCard(cardName, index, reversed);
+    readCard(cardName, position, reversed, card.element);
 
     setTimeout(function() {
         card.element.classList.add("active");
     }, 500);
 
-    if (index <= 0) {
+    if (position >= cardCount) {
         setTimeout(function() {
             askRetry();
         }, 1500);
@@ -66,6 +66,9 @@ async function drawCard(index, cardName) {
 }
 
 async function dealCards() {
+    cardsRead = 0;
+    revealing = false;
+
     for (var i = 0; i < cardCount; i++) {
         interactive.append(
             $(`
@@ -85,10 +88,11 @@ async function dealCards() {
             element.style.transform += "translateX(" + (Math.random() * (15 - -15) + -15) + "px)";
             element.classList.add("active");
             element.addEventListener("click", () => {
-                const cardCheck = tarotArray.length - (cardCount - cardArray.length);
-                
-                if (cardCheck != deckArray.length) return;
-                else flipCard(index, element);
+                if (revealing) return;
+                revealing = true;
+                setTimeout(function() { revealing = false; }, 1000);
+
+                flipCard(element);
             });
         }, 1000 * index);
     });
@@ -96,12 +100,18 @@ async function dealCards() {
     deckArray = [...tarotArray];
 }
 
-async function readCard(cardName, index, reversed) {
+async function readCard(cardName, position, reversed, cardElement) {
     clearHistory('card');
-    const reading = await topicResponse(cardName, index, reversed);
-    cardHistory.push(await reading);
 
-    streamText(await reading, $("#reading"));
+    const revealMin = 1500, revealMax = 2000;
+    const revealPause = new Promise(resolve =>
+        setTimeout(resolve, revealMin + Math.random() * (revealMax - revealMin)));
+
+    const reading = await topicResponse(cardName, position, reversed);
+    await revealPause;
+
+    cardHistory.push(reading);
+    streamText(reading, $(cardElement.querySelector("#reading")));
 }
 
 async function readTextFile(cardName) {

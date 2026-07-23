@@ -39,19 +39,20 @@ function clearHistory(type) {
     }
 }
 
-async function topicResponse(input, index, reversed) {
-    var countArray = ["last", "second", "first"];
+async function topicResponse(input, position, reversed) {
+    const positions = { 1: "Past", 2: "Present", 3: "Future" };
+    const orientation = reversed ? "reversed" : "upright";
 
-    var intro = `I wish to do a tarot card reading on "${topic}", and `;
-    var card = `the ${countArray[index]} card I pulled is the ${input}`;
-    var response;
+    const entry = (typeof cardMeanings !== "undefined") ? cardMeanings[input] : null;
+    const sense = entry ? (reversed ? entry.reversed : entry.upright) : "";
 
-    if (reversed) card += " reversed";
+    let message = "";
+    if (position === 1) message += `Topic: "${topic}"\n`;
+    message += `Position: ${positions[position]} (card ${position} of 3)\n`;
+    message += `Card: ${input}, ${orientation}`;
+    if (sense) message += `\nMeaning (${orientation}): ${sense}`;
 
-    if (index == "2") response = await packageMessage(intro + card);
-    else response = await packageMessage(card + ", and tell me how it relates to my previous cards");
-
-    return response;
+    return await packageMessage(message);
 }
 
 async function queryResponse(input) {
@@ -85,18 +86,36 @@ const packageMessage = async (message) => {
 };
 
 function streamText(text, target) {
+    const CHAR_DELAY = 30;
+    const PAUSES = { ',': 160, ';': 200, ':': 200, '—': 220, '.': 280, '!': 280, '?': 280 };
+
     let completeText = '';
     let index = 0;
 
-    const pseudoStream = setInterval(() => {
-        completeText += text.charAt(index);
+    // Scope scrolling to the card that owns this reading, not just the first .card-front.
+    const container = target.closest(".card-front");
+    const scrollDown = () => { if (container.length) container.scrollTop(container[0].scrollHeight); };
+    scrollDown();
+
+    const step = () => {
+        const character = text.charAt(index);
+        completeText += character;
         target.text(completeText);
-        
+
         index++;
 
-        if ((index % 33) == 0) $(".card-front").scrollTop($(".card-front")[0].scrollHeight);
-        if (index == text.length) clearInterval(pseudoStream), endResponse();
-    }, 17);
+        if ((index % 12) == 0) scrollDown();
+
+        if (index >= text.length) {
+            scrollDown();
+            endResponse();
+            return;
+        }
+
+        setTimeout(step, CHAR_DELAY + (PAUSES[character] || 0));
+    };
+
+    setTimeout(step, CHAR_DELAY);
 }
 
 function endResponse() {

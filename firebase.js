@@ -4,15 +4,13 @@ const { getDatabase, ServerValue } = require('firebase-admin/database');
 require('dotenv').config();
 
 // Credentials
-// The service account is a real secret — it lives only in FIREBASE_SERVICE_ACCOUNT
-// (env), never in the repo. Accepts either raw JSON or a base64-encoded blob.
 function loadServiceAccount() {
     const raw = process.env.FIREBASE_SERVICE_ACCOUNT || '';
     const decoded = /^\s*\{/.test(raw) ? raw : Buffer.from(raw, 'base64').toString('utf8');
     return JSON.parse(decoded);
 }
 
-// Initialize Firebase (guard against re-init on warm serverless invocations)
+// Initialise
 if (!getApps().length) {
     initializeApp({
         credential: cert(loadServiceAccount()),
