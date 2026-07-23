@@ -11,8 +11,8 @@ var systemMessage = {
 // GPT 4o Mini
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
-    organization: "org-SJv3H1cFabYsnK8RhbQA2kM6",
-    project: "proj_7gJTVAwUOZ2lDhelSu8PrTX8",
+    organization: process.env.OPENAI_ORG,
+    project: process.env.OPENAI_PROJECT,
 });
 
 // DeepSeek V3
@@ -33,7 +33,6 @@ async function promptChatGPT(parcel) {
         ]
     };
     
-
     if (model == openai) packageBody.model = "gpt-4o-mini-2024-07-18", packageBody.temperature = 0.9; 
     else packageBody.model = "deepseek-chat", packageBody.temperature = 1.5;
 

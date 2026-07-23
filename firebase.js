@@ -1,66 +1,56 @@
 // Dependencies
-const { initializeApp } = require('firebase/app');
-const { getDatabase, ref, get, push, set, increment, update, query, limitToLast, limitToFirst } = require('firebase/database');
+const { initializeApp, cert, getApps } = require('firebase-admin/app');
+const { getDatabase, ServerValue } = require('firebase-admin/database');
 require('dotenv').config();
 
-// Variables
-const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: "tairotfun.firebaseapp.com",
-    databaseURL: "https://tairotfun-default-rtdb.asia-southeast1.firebasedatabase.app/",
-    projectId: "tairotfun",
-    storageBucket: "tairotfun.appspot.com",
-    messagingSenderId: "1003998231205",
-    appId: "1:1003998231205:web:9cf2e1e8bca8b4698e2b4c",
-    measurementId: "G-7LFTX6JJ4T"
-};
+// Credentials
+// The service account is a real secret — it lives only in FIREBASE_SERVICE_ACCOUNT
+// (env), never in the repo. Accepts either raw JSON or a base64-encoded blob.
+function loadServiceAccount() {
+    const raw = process.env.FIREBASE_SERVICE_ACCOUNT || '';
+    const decoded = /^\s*\{/.test(raw) ? raw : Buffer.from(raw, 'base64').toString('utf8');
+    return JSON.parse(decoded);
+}
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase (guard against re-init on warm serverless invocations)
+if (!getApps().length) {
+    initializeApp({
+        credential: cert(loadServiceAccount()),
+        databaseURL: "https://tairotfun-default-rtdb.asia-southeast1.firebasedatabase.app/"
+    });
+}
+
 const database = getDatabase();
 
 // Functions
 function writeToFirebase(data) {
-    const reference = ref(database, "gallery/");
-
-    push(reference, data);
+    database.ref("gallery").push(data);
 };
 
 function updateStatistics(data) {
-    let reference = ref(database, "stats/");
-
-    if (typeof data != "string") update(reference, data);
-    else {
-        reference = ref(database, "stats/" + data);
-        set(reference, increment(1));
-    }
+    if (typeof data != "string") database.ref("stats").update(data);
+    else database.ref("stats/" + data).set(ServerValue.increment(1));
 }
 
 async function readFromFirebase(path) {
-    const reference = ref(database, path);
-
-    const snapshot = await get(reference);
-    var data = snapshot.val();
-    return data;
+    const snapshot = await database.ref(path).once('value');
+    return snapshot.val();
 }
 
 async function viewFromGallery(sorting, index) {
-    const reference = ref(database, "gallery");
-    var scope;
+    let scope = database.ref("gallery");
 
-    switch(sorting) {
+    switch (sorting) {
         case "newest":
-            scope = query(reference, limitToLast(parseInt(index)));
+            scope = scope.limitToLast(parseInt(index));
             break;
         case "oldest":
-            scope = query(reference, limitToFirst(parseInt(index)));
+            scope = scope.limitToFirst(parseInt(index));
             break;
     }
 
-    const snapshot = await get(scope);
-    const data = snapshot.val();
-
-    return data;
+    const snapshot = await scope.once('value');
+    return snapshot.val();
 }
 
 // Module

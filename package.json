@@ -14,7 +14,7 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "firebase": "^10.12.2",
+    "firebase-admin": "^14.2.0",
     "fuse.js": "^7.0.0",
     "node-fetch": "^3.3.2",
     "openai": "^4.0.0"

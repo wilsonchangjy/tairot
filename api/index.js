@@ -8,15 +8,26 @@ const path = require('path');
 const firebase = require('../firebase.js');
 const openai = require('../openAI.js');
 
-// Variables 
+// Variables
 var fuse;
+const ALLOWED_HOSTS = ['tairot.app', 'localhost', '127.0.0.1', 'tairot-new.vercel.app'];
 
 // Initialise
+function checkOrigin(request, response, next) {
+    const source = request.get('origin') || request.get('referer') || '';
+    let host = '';
+    try { host = new URL(source).hostname; } catch (error) {}
+    const allowed = ALLOWED_HOSTS.some(h => host === h || host.endsWith('.' + h));
+    if (!allowed) return response.status(403).json('forbidden');
+    next();
+}
 
 // Routes
 router.get('/ascii', async (request, response) => {
     const { card } = request.query;
-    const filePath = path.join(process.cwd(), '/ascii/' + card + '.txt');
+    if (!/^[a-z]+$/.test(card || '')) return response.status(400).json('invalid card');
+
+    const filePath = path.join(process.cwd(), 'ascii', card + '.txt');
     const file = fs.readFileSync(filePath);
 
     response.json(file.toString());
@@ -53,6 +64,8 @@ router.get('/search', async (request, response) => {
 
 router.get('/firebase/read', async (request, response) => {
     const { path } = request.query;
+    const ALLOWED_PATHS = new Set(['stats', 'gallery']);
+    if (!ALLOWED_PATHS.has(path)) return response.status(403).json('forbidden');
 
     const data = await firebase.readFromFirebase(path);
     response.json(data);
@@ -66,21 +79,21 @@ router.get('/firebase/read/gallery', async (request, response) => {
     response.json(data);
 });
 
-router.post('/firebase/write', async (request, response) => {
+router.post('/firebase/write', checkOrigin, async (request, response) => {
     const { parcel } = request.body;
     firebase.writeToFirebase(parcel);
 
     return response.status(200);
 });
 
-router.post('/firebase/update', (request, response) => {
+router.post('/firebase/update', checkOrigin, (request, response) => {
     const { parcel } = request.body;
     firebase.updateStatistics(parcel);
 
     return response.status(200);
 });
 
-router.post('/openai/prompt', async (request, response) => {
+router.post('/openai/prompt', checkOrigin, async (request, response) => {
     const { parcel } = request.body;
 
     const reading = await openai.promptChatGPT(parcel);
