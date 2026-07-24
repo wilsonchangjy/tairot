@@ -10,7 +10,7 @@ const openai = require('../openAI.js');
 
 // Variables
 var fuse;
-const ALLOWED_HOSTS = ['tairot.app', 'localhost', '127.0.0.1', 'tairot-new.vercel.app'];
+const ALLOWED_HOSTS = ['tairot.app', 'localhost', '127.0.0.1', 'tairot-new.vercel.app', 'tairot-wilsonchangjy-projects.vercel.app'];
 
 // Initialise
 function checkOrigin(request, response, next) {
