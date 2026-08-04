@@ -100,8 +100,6 @@ router.post('/openai/prompt', checkOrigin, async (request, response) => {
         const reading = await openai.promptChatGPT(parcel);
         response.json(reading);
     } catch (error) {
-        // Always answer. An unhandled rejection here leaves the request open until
-        // Vercel kills the function at 10s, which the client then fails to parse.
         console.log('openai/prompt failed:', error.message);
         response.status(502).json(null);
     }

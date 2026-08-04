@@ -6,10 +6,6 @@ var cardsRead = 0;
 var revealing = false;
 var revealTimeout;
 var activeCard = null;
-
-// Each OpenCard owns its own history array. `cardHistory` simply points at the
-// card currently being read, so follow-up questions still append to the right one —
-// but a later reveal can no longer wipe an earlier card's pending reading.
 var cardHistory = [];
 
 // Initialise
@@ -58,7 +54,6 @@ async function drawCard(position, cardName) {
     const card = new OpenCard(cardName, position, reversed, cardArt);
     interactive.append(card.element);
 
-    // Point the shared reference at this card so follow-up questions land here.
     activeCard = card;
     cardHistory = card.history;
 
@@ -98,13 +93,9 @@ async function dealCards() {
             element.style.transform += "translateX(" + (Math.random() * (15 - -15) + -15) + "px)";
             element.classList.add("active");
             element.addEventListener("click", () => {
-                // Hold the lock for the whole reveal-and-read cycle, not a fixed 1s —
-                // the old timer expired mid-request, so a rapid tap could start a
-                // second reading while the first was still in flight.
                 if (revealing) return;
                 revealing = true;
 
-                // Safety net so a failure upstream can never leave the deck locked.
                 clearTimeout(revealTimeout);
                 revealTimeout = setTimeout(function() { revealing = false; }, 15000);
 
@@ -117,7 +108,7 @@ async function dealCards() {
 }
 
 async function readCard(cardName, position, reversed, card) {
-    const history = card.history;   // this card's own array — never clobbered by a later reveal
+    const history = card.history;  
     const target = $(card.element.querySelector("#reading"));
 
     const revealMin = 1500, revealMax = 2000;
@@ -131,7 +122,6 @@ async function readCard(cardName, position, reversed, card) {
         history.push(reading);
         streamText(reading, target);
     } catch (error) {
-        // Tell the querent instead of leaving the filler line sitting there forever.
         console.log('reading failed:', error);
         await revealPause;
 
@@ -157,7 +147,7 @@ class OpenCard {
         this.cardIndex = index;
         this.reversed = reversed;
         this.cardArt = cardArt
-        this.history = [topic];   // this card's own reading history
+        this.history = [topic];
         this.failed = false;
         this.#init();
     }
@@ -277,7 +267,6 @@ class OpenCard {
         this.element.style.transform = `translate(${direction * window.innerWidth * 1.5}px, ${this.#offsetY}px) rotate(${60 * direction}deg)`;
 
         if (direction > 0) {
-            // Publish this card's own history, not whichever card was read last.
             fetch(baseURL + 'firebase/write', {
                 method: "POST",
                 headers: { "Content-Type": 'application/json' },

@@ -33,8 +33,6 @@ function clearHistory(type) {
             chatHistory.splice(0, chatHistory.length);
             break;
     }
-    // The 'card' case is gone: each OpenCard now seeds its own history with the
-    // topic, so there is no shared card array left to reset.
 }
 
 async function topicResponse(input, position, reversed) {
@@ -90,7 +88,6 @@ function streamText(text, target) {
     let completeText = '';
     let index = 0;
 
-    // Scope scrolling to the card that owns this reading, not just the first .card-front.
     const container = target.closest(".card-front");
     const scrollDown = () => { if (container.length) container.scrollTop(container[0].scrollHeight); };
     scrollDown();

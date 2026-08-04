@@ -24,16 +24,12 @@ const openai = new OpenAI({
     project: process.env.OPENAI_PROJECT,
 });
 
-// DeepSeek — V4 Flash. The `||` guard matters: with an undefined apiKey the SDK
-// silently falls back to OPENAI_API_KEY and sends the wrong key to DeepSeek.
+// DeepSeek — V4 Flash
 const deepseek = new OpenAI({
     baseURL: 'https://api.deepseek.com',
     apiKey: process.env.DEEPSEEK_API_KEY || 'deepseek-key-not-set'
 });
 
-// Both attempts must finish inside Vercel's 10s function ceiling. The fallback gets
-// whatever is left of the budget rather than a fixed slice — auth/credit failures
-// return in well under a second, so in practice it inherits almost the full window.
 const TOTAL_BUDGET = 9000;
 const FIRST_TIMEOUT = 6500;
 const MIN_FALLBACK = 1200;
@@ -57,9 +53,6 @@ async function promptChatGPT(parcel) {
         deepseek: (timeout) => complete(deepseek, "deepseek-v4-flash", 1.3, timeout),
     };
 
-    // 51% OpenAI / 49% DeepSeek. Whichever is drawn, the other becomes the fallback —
-    // so exhausted credits, a bad key, an outage or a timeout on either side still
-    // returns a reading rather than failing the request.
     const [first, second] = Math.random() < 0.51 ? ["openai", "deepseek"] : ["deepseek", "openai"];
 
     const started = Date.now();
