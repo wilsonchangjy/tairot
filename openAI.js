@@ -24,31 +24,55 @@ const openai = new OpenAI({
     project: process.env.OPENAI_PROJECT,
 });
 
-// DeepSeek — V4 Flash
+// DeepSeek — V4 Flash. The `||` guard matters: with an undefined apiKey the SDK
+// silently falls back to OPENAI_API_KEY and sends the wrong key to DeepSeek.
 const deepseek = new OpenAI({
     baseURL: 'https://api.deepseek.com',
-    apiKey: process.env.DEEPSEEK_API_KEY
+    apiKey: process.env.DEEPSEEK_API_KEY || 'deepseek-key-not-set'
 });
 
+// Both attempts must finish inside Vercel's 10s function ceiling. The fallback gets
+// whatever is left of the budget rather than a fixed slice — auth/credit failures
+// return in well under a second, so in practice it inherits almost the full window.
+const TOTAL_BUDGET = 9000;
+const FIRST_TIMEOUT = 6500;
+const MIN_FALLBACK = 1200;
+
 async function promptChatGPT(parcel) {
-    let messages = mapMessages(parcel);
-    let model = Math.random() < 0.51 ? openai : deepseek;   // 51% OpenAI / 49% DeepSeek
-    var packageBody = {
-        model: "",
-        messages: [
-            systemMessage,
-            ...messages
-        ]
+    const messages = mapMessages(parcel);
+
+    const complete = async (client, modelName, temperature, timeout) => {
+        const packageBody = { model: modelName, messages: [systemMessage, ...messages] };
+        if (temperature !== undefined) packageBody.temperature = temperature;
+
+        const startTime = Date.now();
+        const response = await client.chat.completions.create(packageBody, { timeout, maxRetries: 0 });
+
+        console.log(modelName, Date.now() - startTime);
+        return response.choices[0].message.content;
     };
 
-    if (model == openai) packageBody.model = "gpt-5.4-nano";
-    else packageBody.model = "deepseek-v4-flash", packageBody.temperature = 1.3;
+    const providers = {
+        openai: (timeout) => complete(openai, "gpt-5.4-nano", undefined, timeout),
+        deepseek: (timeout) => complete(deepseek, "deepseek-v4-flash", 1.3, timeout),
+    };
 
-    const startTime = Date.now();
-    const response = await model.chat.completions.create(packageBody);
+    // 51% OpenAI / 49% DeepSeek. Whichever is drawn, the other becomes the fallback —
+    // so exhausted credits, a bad key, an outage or a timeout on either side still
+    // returns a reading rather than failing the request.
+    const [first, second] = Math.random() < 0.51 ? ["openai", "deepseek"] : ["deepseek", "openai"];
 
-    console.log(packageBody.model, Date.now() - startTime);
-    return response.choices[0].message.content;
+    const started = Date.now();
+
+    try {
+        return await providers[first](FIRST_TIMEOUT);
+    } catch (error) {
+        const remaining = TOTAL_BUDGET - (Date.now() - started);
+        if (remaining < MIN_FALLBACK) throw error;   // no time to retry — surface the real failure
+
+        console.log(`${first} failed (${error.message}) — falling back to ${second}`);
+        return await providers[second](remaining);
+    }
 };
 
 

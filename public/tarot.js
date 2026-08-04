@@ -32,11 +32,9 @@ function clearHistory(type) {
         case 'chat':
             chatHistory.splice(0, chatHistory.length);
             break;
-        case 'card':
-            cardHistory.splice(0, cardHistory.length);
-            cardHistory.push(topic);
-            break;
     }
+    // The 'card' case is gone: each OpenCard now seeds its own history with the
+    // topic, so there is no shared card array left to reset.
 }
 
 async function topicResponse(input, position, reversed) {

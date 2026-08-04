@@ -2,9 +2,15 @@
 const cardCount = 3;
 var cardArray;
 var deckArray = [];
-var cardHistory = [];
 var cardsRead = 0;
 var revealing = false;
+var revealTimeout;
+var activeCard = null;
+
+// Each OpenCard owns its own history array. `cardHistory` simply points at the
+// card currently being read, so follow-up questions still append to the right one —
+// but a later reveal can no longer wipe an earlier card's pending reading.
+var cardHistory = [];
 
 // Initialise
 
@@ -52,7 +58,11 @@ async function drawCard(position, cardName) {
     const card = new OpenCard(cardName, position, reversed, cardArt);
     interactive.append(card.element);
 
-    readCard(cardName, position, reversed, card.element);
+    // Point the shared reference at this card so follow-up questions land here.
+    activeCard = card;
+    cardHistory = card.history;
+
+    readCard(cardName, position, reversed, card);
 
     setTimeout(function() {
         card.element.classList.add("active");
@@ -88,9 +98,15 @@ async function dealCards() {
             element.style.transform += "translateX(" + (Math.random() * (15 - -15) + -15) + "px)";
             element.classList.add("active");
             element.addEventListener("click", () => {
+                // Hold the lock for the whole reveal-and-read cycle, not a fixed 1s —
+                // the old timer expired mid-request, so a rapid tap could start a
+                // second reading while the first was still in flight.
                 if (revealing) return;
                 revealing = true;
-                setTimeout(function() { revealing = false; }, 1000);
+
+                // Safety net so a failure upstream can never leave the deck locked.
+                clearTimeout(revealTimeout);
+                revealTimeout = setTimeout(function() { revealing = false; }, 15000);
 
                 flipCard(element);
             });
@@ -100,18 +116,31 @@ async function dealCards() {
     deckArray = [...tarotArray];
 }
 
-async function readCard(cardName, position, reversed, cardElement) {
-    clearHistory('card');
+async function readCard(cardName, position, reversed, card) {
+    const history = card.history;   // this card's own array — never clobbered by a later reveal
+    const target = $(card.element.querySelector("#reading"));
 
     const revealMin = 1500, revealMax = 2000;
     const revealPause = new Promise(resolve =>
         setTimeout(resolve, revealMin + Math.random() * (revealMax - revealMin)));
 
-    const reading = await topicResponse(cardName, position, reversed);
-    await revealPause;
+    try {
+        const reading = await topicResponse(cardName, position, reversed);
+        await revealPause;
 
-    cardHistory.push(reading);
-    streamText(reading, $(cardElement.querySelector("#reading")));
+        history.push(reading);
+        streamText(reading, target);
+    } catch (error) {
+        // Tell the querent instead of leaving the filler line sitting there forever.
+        console.log('reading failed:', error);
+        await revealPause;
+
+        card.failed = true;
+        target.text("The cards are clouded, and this one will not be read. Swipe on, and try again in a moment.");
+    } finally {
+        clearTimeout(revealTimeout);
+        revealing = false;
+    }
 }
 
 async function readTextFile(cardName) {
@@ -128,6 +157,8 @@ class OpenCard {
         this.cardIndex = index;
         this.reversed = reversed;
         this.cardArt = cardArt
+        this.history = [topic];   // this card's own reading history
+        this.failed = false;
         this.#init();
     }
 
@@ -246,10 +277,11 @@ class OpenCard {
         this.element.style.transform = `translate(${direction * window.innerWidth * 1.5}px, ${this.#offsetY}px) rotate(${60 * direction}deg)`;
 
         if (direction > 0) {
+            // Publish this card's own history, not whichever card was read last.
             fetch(baseURL + 'firebase/write', {
                 method: "POST",
                 headers: { "Content-Type": 'application/json' },
-                body: JSON.stringify({ parcel: cardHistory })
+                body: JSON.stringify({ parcel: this.history })
             });
             fetch(baseURL + 'firebase/update', {
                 method: "POST",
